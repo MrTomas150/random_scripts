@@ -1,0 +1,122 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+" call vundle#begin('~/.vim/bundle')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" Git plugin not hosted on GitHub
+Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Avoid a name conflict with L9
+" Plugin 'user/L9', {'name': 'newL9'}
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'jnurmine/Zenburn'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+"
+" Brief help
+" :PluginList          - list configured plugins
+" :PluginInstall(!)    - install (update) plugins
+" :PluginSearch(!) foo - search (or refresh cache first) for foo
+" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+" Enable folding with the spacebar
+nnoremap <space> za
+au BufNewFile, BufRead *.py,*.cpp
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+    \ set textwidth=0
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+:au BufRead, BufNewFile *.py,*.pyw,*.c,*.h,*.cpp match BadWhitespace /\s\+$/
+	\ set encoding=utf-8
+Bundle 'Valloric/YouCompleteMe'
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"python with virtualenv support
+let python_highlight_all=1
+syntax on
+set t_Co=256
+if has('gui_running')
+  set background=dark
+  colorscheme gruvbox
+else
+  set background=dark
+  colorscheme gruvbox
+endif
+call togglebg#map("<F5>")
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+set nu
+set clipboard=unnamedplus
+filetype indent on
+autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+
+autocmd FileType python map <buffer> <F7> :w<CR>:exec '!python3 -m pdb' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F7> <esc>:w<CR>:exec '!python3 -m pdb' shellescape(@%, 1)<CR>
+
+autocmd filetype c map <F9> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').'<CR>
+autocmd filetype cpp map <F9> :w <bar> exec '!g++ -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+autocmd filetype cpp imap <F9> <esc>:w <bar> exec '!g++ -g '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+
+autocmd filetype cpp map <F7>:w exec './'.shellescape('%:r')<CR>
+
+
+autocmd FileType python map <buffer> <F8> :w<CR>:exec '!python' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F8> <esc>:w<CR>:exec '!python' shellescape(@%, 1)<CR>
+autocmd FileType tex map <buffer> <F9> :w<CR>:exec '!pdflatex' shellescape(@%, 1)<CR>
+autocmd FileType tex imap <buffer> <F9> <esc>:w<CR>:exec '!pdflatex' shellescape(@%, 1)<CR>:sh $fl=shellescape(@%,1)<CR>:sh echo ${fl:0:-4}
+autocmd filetype pascal nnoremap <F9> :w <bar> exec '!fpc '.shellescape('%').' && ./'.shellescape('%:r')<CR>
+
+
+
+
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set textwidth=0
+set expandtab
+set autoindent
+set fileformat=unix
+set pastetoggle=<F2>
+
+inoremap <C-v> <ESC>"+pa
+vnoremap <C-c> "+y
+vnoremap <C-x> "+d
+inoremap <C-s> <ESC>:w
+nnoremap <C-d> :packadd termdebug<CR><C-w>v:Termdebug<CR><C-w>j<C-w>j:q<CR><C-w>l
