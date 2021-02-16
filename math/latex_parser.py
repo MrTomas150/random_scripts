@@ -30,7 +30,8 @@ def parse(s):
     s=re.sub(r'[A-Za-z]','',s)
     return s
 
-s='5\\frac{123}{1}\cdot4^2'
-s2=r'\frac{1u\cdot9\cdot10^{16}}{1e\cdot1.3T\cdot11cm}'
-print(parse(s), eval(parse(s)))
-print(parse(s2), eval(parse(s2)))
+#s='5\\frac{123}{1}\cdot4^2'
+while 1:
+    s2=input()
+#print(parse(s), eval(parse(s)))
+    print(parse(s2), eval(parse(s2)))
