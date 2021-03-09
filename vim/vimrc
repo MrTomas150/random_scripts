@@ -35,6 +35,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'xuhdev/vim-latex-live-preview'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -54,7 +55,7 @@ set foldmethod=indent
 set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
-au BufNewFile, BufRead *.py,*.cpp
+au BufNewFile, BufRead *.py
     \ set tabstop=4
     \ set softtabstop=4
     \ set shiftwidth=4
@@ -62,6 +63,26 @@ au BufNewFile, BufRead *.py,*.cpp
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
+
+au BufNewFile, BufRead *.cpp
+    \ set tabstop=1
+    \ set softtabstop=1
+    \ set shiftwidth=1
+    \ set textwidth=0
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+au BufNewFile, BufRead *.tex
+    \ set tabstop=1
+    \ set softtabstop=1
+    \ set shiftwidth=1
+    \ set textwidth=0
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+let g:tex_flavor = "latex"
 
 :au BufRead, BufNewFile *.py,*.pyw,*.c,*.h,*.cpp match BadWhitespace /\s\+$/
 	\ set encoding=utf-8
@@ -82,8 +103,35 @@ endif
 call togglebg#map("<F5>")
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 set nu
-set clipboard=unnamedplus
 filetype indent on
+
+fun! TexEnv(name)
+    let l:l = line(".") - 1
+    call append(l:l, "\\end{" . a:name . "}")
+    call append(l:l, "")
+    call append(l:l, "\\begin{" . a:name . "}")
+endfun
+
+nnoremap <C-e> :call TexEnv(input("TeX environment name: "))<CR><UP><UP>i
+imap <C-e> <ESC>:call TexEnv(input("TeX environment name: "))<CR><UP><UP>
+
+
+inoremap ( ()<Left>
+inoremap [ []<Left>
+inoremap { {}<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap ` ``<Left>
+
+inoremap () ()
+inoremap [] []
+inoremap {} {}
+inoremap "" ""
+inoremap '' ''
+inoremap `` ``
+
+
+
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 
@@ -99,24 +147,32 @@ autocmd filetype cpp map <F7>:w exec './'.shellescape('%:r')<CR>
 
 autocmd FileType python map <buffer> <F8> :w<CR>:exec '!python' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F8> <esc>:w<CR>:exec '!python' shellescape(@%, 1)<CR>
+
+autocmd FileType tex map <buffer> <F8> :w<CR>:LLPStartPreview<CR>
+autocmd FileType tex imap <buffer> <F8> :w<CR>:LLPStartPreview<CR>
+
 autocmd FileType tex map <buffer> <F9> :w<CR>:exec '!pdflatex' shellescape(@%, 1)<CR>
 autocmd FileType tex imap <buffer> <F9> <esc>:w<CR>:exec '!pdflatex' shellescape(@%, 1)<CR>:sh $fl=shellescape(@%,1)<CR>:sh echo ${fl:0:-4}
+
+autocmd Filetype tex inoremap <buffer> k kk<Left>
 autocmd filetype pascal nnoremap <F9> :w <bar> exec '!fpc '.shellescape('%').' && ./'.shellescape('%:r')<CR>
+autocmd filetype js map <buffer> <F9> :w<CR>
+"<bar> exec '!node '.shellescape('%')<CR>
 
 
 
 
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set textwidth=0
-set expandtab
+"set expandtab
 set autoindent
 set fileformat=unix
 set pastetoggle=<F2>
 
-inoremap <C-v> <ESC>"+pa
-vnoremap <C-c> "+y
-vnoremap <C-x> "+d
-inoremap <C-s> <ESC>:w
-nnoremap <C-d> :packadd termdebug<CR><C-w>v:Termdebug<CR><C-w>j<C-w>j:q<CR><C-w>l
+""inoremap <C-v> <ESC>"+pa
+""vnoremap <C-c> "+y
+""vnoremap <C-x> "+d
+""inoremap <C-s> <ESC>:w
+""nnoremap <C-d> :packadd termdebug<CR><C-w>v:Termdebug<CR><C-w>j<C-w>j:q<CR><C-w>l
